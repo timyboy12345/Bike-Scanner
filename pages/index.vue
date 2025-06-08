@@ -21,7 +21,7 @@
             </div>
           </div>
         </div>
-        <div class="opacity-60 mb-2 text-sm">Gescand op: {{ scans.latestScan.date_created }}</div>
+        <div class="opacity-60 mb-2 text-sm">Gescand op: {{ displayDateTime(scans.latestScan.date_created) }}</div>
       </div>
       <div v-else class="opacity-60 mt-4">Je staat momenteel nog nergens</div>
     </div>
@@ -48,6 +48,8 @@
 </template>
 
 <script setup lang="ts">
+import {displayDateTime} from "~/mixins/generic-mixin";
+
 const {logout} = useDirectusAuth();
 
 definePageMeta({

@@ -16,7 +16,7 @@
 
       <div class="flex flex-col">
         <label for="email">Email</label>
-        <input class="rounded" :class="{'opacity-60': fetching}" type="email" name="email" id="email" v-model="email">
+        <input class="rounded" autofocus :class="{'opacity-60': fetching}" type="email" name="email" id="email" v-model="email">
       </div>
 
       <div class="flex flex-col">

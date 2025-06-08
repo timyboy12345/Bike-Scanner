@@ -6,6 +6,14 @@
     </div>
 
     <div class="m-4 md:m-8 lg:m-8 xl:max-w-xl xl:mx-auto">
+      <NuxtLink id="back-arrow" class="flex flex-row items-center text-gray-600 fill-gray-600 text-xs" href="/" v-if="showBack">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 mr-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+
+        <span>Terug</span>
+      </NuxtLink>
+
       <slot v-if="!user || store.isReady"/>
 
       <div v-else-if="user" class="fixed top-0 left-0 flex flex-col items-center justify-center gap-4 h-full w-full">
@@ -21,6 +29,10 @@
 
         Scans worden geladen...
       </div>
+
+      <div v-else>
+        Laden...
+      </div>
     </div>
   </div>
 </template>
@@ -32,6 +44,7 @@ const {getItems} = useDirectusItems();
 
 const store = useScanStore();
 const pushes = usePushesStore();
+const route = useRoute();
 
 const user = useDirectusUser();
 if (user.value) {
@@ -43,4 +56,14 @@ if (user.value) {
   });
 }
 
+const showBack = computed(() => {
+  return !['/', '/login'].includes(route.path)
+})
+
 </script>
+
+<style>
+#back-arrow:hover > span {
+  text-decoration: underline;
+}
+</style>

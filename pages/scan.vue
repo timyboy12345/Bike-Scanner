@@ -1,15 +1,11 @@
 <template>
   <div>
-    <NuxtLink href="/" class="text-sm opacity-60 hover:underline">
-      < Terug
-    </NuxtLink>
-
     <div>
-      <h1 class="text-lg text-indigo-800">
+      <h1 class="text-lg text-indigo-800 mb-4">
         Nieuwe Checkin
       </h1>
 
-      <div class="flex flex-col gap-4 mt-8" v-if="type === 'choose'">
+      <div class="flex flex-col gap-4" v-if="type === 'choose'">
         <button type="button" @click="choose('camera')" class="rounded bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100 py-2 px-4">Scan QR code</button>
         <button type="button" @click="choose('manual')" class="rounded bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100 py-2 px-4">Voer handmatig in</button>
       </div>
