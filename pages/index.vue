@@ -54,14 +54,18 @@ definePageMeta({
   middleware: ["auth"]
 })
 
+useSeoMeta({
+  title: 'Home',
+  description: 'Scan de QR codes bij NS fietsenstallingen en vergeet nooit meer waar je je fiets hebt neergezet!',
+})
+
 const scans = useScanStore();
 const router = useRouter();
 
 function logoutDirectus() {
   logout()
       .then(() => {
-        // router.push('/login')
-        window.location.href = '/login';
+        router.push('/login')
       })
 }
 </script>

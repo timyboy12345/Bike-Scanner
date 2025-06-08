@@ -5,18 +5,24 @@
         Inloggen
       </h1>
 
+      <p class="opacity-60">
+        Log in om op te slaan waar je fiets staat, of om terug te kijken waar je stond. Accounts kunnen momenteel alleen
+        worden aangemaakt door beheerders.
+      </p>
+
       <div v-if="loginError" class="text-sm text-red-800">
         {{ loginError }}
       </div>
 
       <div class="flex flex-col">
         <label for="email">Email</label>
-        <input :class="{'opacity-60': fetching}" type="email" name="email" id="email" v-model="email">
+        <input class="rounded" :class="{'opacity-60': fetching}" type="email" name="email" id="email" v-model="email">
       </div>
 
       <div class="flex flex-col">
         <label for="password">Wachtwoord</label>
-        <input :class="{'opacity-60': fetching}" type="password" name="password" id="password" v-model="password">
+        <input class="rounded" :class="{'opacity-60': fetching}" type="password" name="password" id="password"
+               v-model="password">
       </div>
 
       <button class="rounded bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100 py-2 px-4"
@@ -40,6 +46,10 @@ const fetching = ref(false)
 const router = useRouter();
 const store = useScanStore();
 
+useSeoMeta({
+  title: 'Inloggen',
+})
+
 const onSubmit = async () => {
   if (fetching.value) {
     return;
@@ -51,12 +61,10 @@ const onSubmit = async () => {
     await login({email: email.value, password: password.value});
     router.push('/')
 
-    const items = await getItems({
+    store.scans = await getItems({
       collection: "bike_stores",
       sort: '-date_created'
     });
-
-    store.scans = items;
   } catch (e) {
     loginError.value = e
   }
