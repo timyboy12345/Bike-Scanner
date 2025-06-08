@@ -1,5 +1,10 @@
 <template>
-  <div class="bg-gray-100 w-full h-full absolute top-0 left-0">
+  <div class="bg-gray-100 w-screen h-screen overflow-scroll top-0 left-0">
+    <div v-if="pushes.firstPush" class="z-10 fixed bottom-4 left-4 right-4 bg-white rounded shadow p-4">
+      <div class="font-bold text-indigo-800">{{ pushes.firstPush.title }}</div>
+      <div class="text-sm opacity-60">{{ pushes.firstPush.content }}</div>
+    </div>
+
     <div class="m-4 md:m-8 lg:m-8 xl:max-w-xl xl:mx-auto">
       <slot v-if="!user || store.isReady"/>
 
@@ -26,19 +31,16 @@ import {useScanStore} from "~/stores/scans";
 const {getItems} = useDirectusItems();
 
 const store = useScanStore();
+const pushes = usePushesStore();
 
 const user = useDirectusUser();
 if (user.value) {
-  const filters = {};
-  const items = await getItems({
+  store.scans = await getItems({
     collection: "bike_stores",
     params: {
-      filter: filters,
       sort: '-date_created'
     },
   });
-
-  store.scans = items;
 }
 
 </script>

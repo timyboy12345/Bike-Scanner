@@ -9,6 +9,10 @@
         Nieuwe Checkin
       </h1>
 
+      <div v-if="!cameraLoaded" class="rounded w-full h-60 bg-gray-200">
+
+      </div>
+
       <div id="reader" class="w-full min-h-64 overflow-hidden rounded"></div>
     </div>
   </div>
@@ -17,11 +21,14 @@
 
 <script setup lang="ts">
 import {Html5Qrcode} from "html5-qrcode";
+import {usePushesStore} from "~/stores/pushes";
 const {createItems} = useDirectusItems();
 
 const watcher: any = ref(undefined)
 const router = useRouter();
 const scans = useScanStore();
+const pushes = usePushesStore();
+const cameraLoaded = ref(false)
 
 definePageMeta({
   middleware: ["auth"],
@@ -34,15 +41,15 @@ Html5Qrcode.getCameras().then(devices => {
    * { id: "id", label: "label" }
    */
   if (devices && devices.length) {
-    var cameraId = devices[0].id;
+    // var cameraId = devices[0].id;
     startScanning()
   }
 }).catch(err => {
-  // handle err
+  pushes.create('Camerafout', `Camera kon niet worden geopend, kan niet scannen. "${err}"`)
 });
 
 function startScanning() {
-  watcher.value = new Html5Qrcode(/* element id */ "reader");
+  watcher.value = new Html5Qrcode("reader");
   watcher.value.start(
       {facingMode: "environment"},
       {},
@@ -59,6 +66,7 @@ function startScanning() {
         // Start failed, handle it.
         console.error(err)
       });
+  cameraLoaded.value = true;
 }
 
 onBeforeRouteLeave((to, from, next) => {
@@ -101,8 +109,8 @@ function handleResult(text: string) {
   })
       .then((res) => {
         console.log(res)
-        scans.scans.push(res[0])
-        // TODO: Add a pop-up that the scan was successfull
+        scans.scans.unshift(res[0])
+        pushes.create('Toegevoegd', 'De nieuwe locatie is toegevoegd')
         router.push('/')
       })
       .catch((err) => {

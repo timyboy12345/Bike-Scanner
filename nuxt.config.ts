@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
     compatibilityDate: '2025-05-15',
     devtools: {enabled: true},
-    modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', 'nuxt-directus'],
+    modules: [
+      '@nuxtjs/tailwindcss',
+      '@pinia/nuxt',
+      'nuxt-directus',
+      '@vite-pwa/nuxt'
+    ],
     runtimeConfig: {
         public: {
             directus: {

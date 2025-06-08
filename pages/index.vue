@@ -23,7 +23,7 @@
         </div>
         <div class="opacity-60 mb-2 text-sm">Gescand op: {{ scans.latestScan.date_created }}</div>
       </div>
-      <div v-else class="opacity-60">Je staat momenteel nog nergens</div>
+      <div v-else class="opacity-60 mt-4">Je staat momenteel nog nergens</div>
     </div>
 
     <div class="w-full flex flex-col gap-4 lg:flex-row">
@@ -59,7 +59,9 @@ const router = useRouter();
 
 function logoutDirectus() {
   logout()
-  // router.push('/login')
-  window.location.href = '/login';
+      .then(() => {
+        // router.push('/login')
+        window.location.href = '/login';
+      })
 }
 </script>

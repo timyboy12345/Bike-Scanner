@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia'
 
 export const useScanStore = defineStore('scans', {
-    state: () => ({
+    state: (): {scans: null | any[]} => ({
         scans: null,
     }),
     getters: {
