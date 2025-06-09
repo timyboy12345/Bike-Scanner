@@ -6,7 +6,7 @@
     </div>
 
     <div class="m-4 md:m-8 lg:m-8 xl:max-w-xl xl:mx-auto">
-      <NuxtLink id="back-arrow" class="flex flex-row items-center text-gray-600 fill-gray-600 text-xs" href="/" v-if="showBack">
+      <NuxtLink id="back-arrow" class="flex flex-row items-center text-gray-600 fill-gray-600 text-xs" href="/dashboard" v-if="showBack">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 mr-1">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
         </svg>
@@ -57,7 +57,7 @@ if (user.value) {
 }
 
 const showBack = computed(() => {
-  return !['/', '/login', '/register'].includes(route.path)
+  return !['/', '/login', '/register', '/info', '/dashboard'].includes(route.path)
 })
 
 </script>

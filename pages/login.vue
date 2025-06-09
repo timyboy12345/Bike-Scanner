@@ -32,10 +32,17 @@
       </button>
     </form>
 
-    <NuxtLink href="/register"
-              class="text-center rounded mt-4 block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100">
-      Registreren
-    </NuxtLink>
+    <div class="flex flex-col lg:flex-row gap-4">
+      <NuxtLink href="/register"
+                class="text-center rounded mt-4 block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
+        Registreren
+      </NuxtLink>
+
+      <NuxtLink href="/"
+                class="text-center rounded mt-4 block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
+        Meer Info
+      </NuxtLink>
+    </div>
   </div>
 </template>
 
@@ -64,7 +71,7 @@ const onSubmit = async () => {
 
   try {
     await login({email: email.value, password: password.value});
-    router.push('/')
+    router.push('/dashboard')
 
     store.scans = await getItems({
       collection: "bike_stores",
