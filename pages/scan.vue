@@ -1,38 +1,66 @@
 <template>
   <div>
     <div>
-      <h1 class="text-lg text-indigo-800 mb-4">
+      <h1 class="text-lg text-secondary-900">
         Nieuwe Checkin
       </h1>
 
+      <p class="mb-4 text-sm opacity-60">
+        Check hier in door je fietslocatie handmatig in te voeren, of door de QR code op het fietsenrek te scannen.
+      </p>
+
       <div class="flex flex-col gap-4" v-if="type === 'choose'">
-        <button type="button" @click="choose('camera')" class="rounded bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100 py-2 px-4">Scan QR code</button>
-        <button type="button" @click="choose('manual')" class="rounded bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100 py-2 px-4">Voer handmatig in</button>
+        <button type="button" @click="choose('camera')"
+                class="rounded bg-secondary-900 text-white hover:bg-secondary-950 transition duration-100 py-2 px-4">
+          Scan QR code
+        </button>
+        <button type="button" @click="choose('manual')"
+                class="rounded bg-secondary-900 text-white hover:bg-secondary-950 transition duration-100 py-2 px-4">
+          Voer handmatig in
+        </button>
       </div>
 
-      <div v-if="type === 'camera' && !cameraLoaded" class="rounded w-full h-60 bg-gray-200"></div>
+      <div v-if="type === 'camera'" class="flex flex-col w-full gap-4">
+        <div id="reader" class="relative flex flex-col justify-center rounded min-h-60 bg-gray-200 overflow-hidden">
+          <div v-if="cameraError" class="shadow bg-secondary-900 mx-8 text-white rounded p-4">
+            <div>Kon camera niet openen</div>
+            <div class="text-sm opacity-60">{{ cameraError }}</div>
+          </div>
+        </div>
+        <button @click="choose('manual')" type="button"
+                class="rounded py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100">
+          Handmatig invoeren
+        </button>
+      </div>
 
-      <div v-if="type === 'camera'" id="reader" class="w-full min-h-64 overflow-hidden rounded"></div>
       <form class="flex flex-col gap-4" method="get" v-if="type==='manual'" @submit.prevent="handleManual">
         <div class="flex flex-col">
           <label for="location">Locatie</label>
-          <input class="rounded" :class="{'opacity-60': fetching}" placeholder="UO" type="text" name="location" id="location" v-model="location">
+          <input class="rounded" :class="{'opacity-60': fetching}" placeholder="UO" type="text" name="location"
+                 id="location" v-model="location">
         </div>
 
         <div class="flex flex-col">
           <label for="row">Rij</label>
-          <input class="rounded" :class="{'opacity-60': fetching}" placeholder="04" type="text" name="row" id="row" v-model="row">
+          <input class="rounded" :class="{'opacity-60': fetching}" placeholder="04" type="text" name="row" id="row"
+                 v-model="row">
         </div>
 
         <div class="flex flex-col">
           <label for="spot">Plek</label>
-          <input class="rounded" :class="{'opacity-60': fetching}" placeholder="302" type="text" name="spot" id="spot" v-model="spot">
+          <input class="rounded" :class="{'opacity-60': fetching}" placeholder="302" type="text" name="spot" id="spot"
+                 v-model="spot">
         </div>
 
-        <button class="rounded bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100 py-2 px-4"
+        <button class="rounded bg-secondary-900 text-white hover:bg-secondary-950 transition duration-100 py-2 px-4"
                 type="submit"
                 :class="{'opacity-60': fetching}">
-          Inloggen
+          Opslaan
+        </button>
+
+        <button @click="choose('camera')" type="button"
+                class="rounded py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100">
+          QR Code Scannen
         </button>
       </form>
     </div>
@@ -43,6 +71,7 @@
 <script setup lang="ts">
 import {Html5Qrcode} from "html5-qrcode";
 import {usePushesStore} from "~/stores/pushes";
+
 const {createItems} = useDirectusItems();
 
 const watcher: any = ref(undefined)
@@ -56,6 +85,7 @@ const location = ref('UO');
 const row = ref('');
 const spot = ref('');
 const fetching = ref(false);
+const cameraError = ref(undefined)
 
 definePageMeta({
   middleware: ["auth"],
@@ -70,6 +100,8 @@ function choose(t: string) {
 
   if (t === 'camera') {
     triggerCamera();
+  } else {
+    stopCamera();
   }
 }
 
@@ -85,7 +117,9 @@ function triggerCamera() {
       startScanning()
     }
   }).catch(err => {
+    console.error(err)
     pushes.create('Camerafout', `Camera kon niet worden geopend, kan niet scannen. "${err}"`)
+    cameraError.value = err
   });
 }
 
@@ -110,28 +144,52 @@ function startScanning() {
   cameraLoaded.value = true;
 }
 
-onBeforeRouteLeave((to, from, next) => {
+function stopCamera() {
   if (watcher.value) {
-    watcher.value.stop().then((ignore: any) => {
-      // QR Code scanning is stopped.
-      console.log("Stopped scanning QR codes")
-      next()
-    }).catch((err: any) => {
-      console.error(err)
-      // Stop failed, handle it.
-      next()
-    });
+    try {
+      watcher.value.stop().then((ignore: any) => {
+        // QR Code scanning is stopped.
+        console.log("Stopped scanning QR codes")
+        watcher.value = undefined
+      }).catch((err: any) => {
+        console.error(err)
+        // Stop failed, handle it.
+      });
+    } catch (e) {
+      console.error(e)
+    }
   } else {
-    next();
+    console.log("No watcher set")
   }
+}
+
+onBeforeRouteLeave((to, from, next) => {
+  console.log("Trying to leave");
+
+  stopCamera();
+  next();
+
+  console.log("Left")
 })
 
-function handleManual(){
+function handleManual() {
+  if (!location.value || !row.value || !spot.value) {
+    pushes.create('Voer alle gegevens in', 'Je moet je locatie, rij en plaats invullen om door te gaan!');
+    return;
+  }
+
   addCheckin(location.value, row.value, spot.value);
 }
 
 function handleResult(text: string) {
   console.log(text)
+
+  let pattern = /http:\/\/ab9.nl\/[A-Z]{2}\d{5}/
+  if (!pattern.test(text)) {
+    pushes.create('Ongeldige QR code', 'Deze QR code wordt niet herkend, probeer hem opnieuw te scannen, of voer handmatig in.');
+    return;
+  }
+
   watcher.value.stop()
   watcher.value = undefined
 
@@ -146,7 +204,7 @@ function handleResult(text: string) {
   addCheckin(location, row, spot)
 }
 
-function addCheckin(location: string, row: string, spot: string){
+function addCheckin(location: string, row: string, spot: string) {
   console.log(`${location} / ${row} / ${spot}`)
 
   if (fetching.value) {

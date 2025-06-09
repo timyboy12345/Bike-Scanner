@@ -1,6 +1,6 @@
 {
-  "name": "BikePark",
-  "short_name": "BP",
+  "name": "Fietsenstalling",
+  "short_name": "Fietsen",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#406aff",
-  "background_color": "#406aff",
+  "theme_color": "#002d72",
+  "background_color": "#ffc72c",
   "display": "standalone"
 }

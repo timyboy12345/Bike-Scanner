@@ -30,7 +30,7 @@ export default defineNuxtConfig({
                 {rel: 'manifest', href: '/site.webmanifest'},
             ],
             meta: [
-                {name: 'apple-mobile-web-app-title', content: 'BikePark'}
+                {name: 'apple-mobile-web-app-title', content: 'Fietsenstalling'}
             ]
         }
     }

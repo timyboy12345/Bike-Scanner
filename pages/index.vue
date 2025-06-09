@@ -28,17 +28,17 @@
 
     <div class="w-full flex flex-col gap-4 lg:flex-row">
       <NuxtLink
-          class="flex-grow text-center rounded py-2 px-4 bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100"
+          class="flex-grow text-center rounded py-2 px-4 bg-secondary-900 text-white hover:bg-secondary-950 transition duration-100"
           href="/scan">
         Nieuwe Checkin
       </NuxtLink>
       <NuxtLink
-          class="flex-grow text-center rounded py-2 px-4 bg-indigo-800 text-white hover:bg-indigo-900 transition duration-100"
+          class="flex-grow text-center rounded py-2 px-4 bg-secondary-900 text-white hover:bg-secondary-950 transition duration-100"
           href="/history">
         Geschiedenis
       </NuxtLink>
       <button
-          class="flex-grow text-center rounded py-2 px-4 bg-red-700 text-white hover:bg-red-800 transition duration-100"
+          class="flex-grow text-center rounded py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100"
           @click="logoutDirectus"
       >
         Uitloggen

@@ -16,7 +16,7 @@ export const usePushesStore = defineStore('pushes', {
 
             const pushes = this.pushes;
             setTimeout(() => {
-                pushes.pop();
+                pushes.shift();
             }, 1000 * 8)
         }
     }
