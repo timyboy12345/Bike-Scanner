@@ -1,14 +1,25 @@
 <template>
   <div>
     <img alt="Afbeelding van een NS fietsenstalling"
-        src="https://www.ns.nl/binaries/_ht_1698138455512/opengraph/content/gallery/ns-nl/landing-hero-afbeeldingen/man-stalt-zijn-fiets.jpeg"
-        class="-mt-8 mb-4 max-h-60 w-full object-cover">
+         src="https://www.ns.nl/binaries/_ht_1698138455512/opengraph/content/gallery/ns-nl/landing-hero-afbeeldingen/man-stalt-zijn-fiets.jpeg"
+         class="mb-4 max-h-60 w-full object-cover">
 
     <h1 class="text-lg text-secondary-900">
       Fietsplek Vinden
     </h1>
 
     <p class="opacity-60 text-sm">Welkom bij Fietsplek Vinden, dé app om je fiets terug te vinden. </p>
+
+    <div class="flex text-sm gap-4 mt-4">
+      <NuxtLink href="/login"
+                class="rounded py-1 px-2 text-white bg-secondary-900 hover:bg-secondary-950 transition duration-100 grow text-center">
+        Inloggen
+      </NuxtLink>
+      <NuxtLink href="/register"
+                class="rounded py-1 px-2 text-white bg-secondary-900 hover:bg-secondary-950 transition duration-100 grow text-center">
+        Account Aanmaken
+      </NuxtLink>
+    </div>
 
     <div class="flex flex-col my-4">
       <p>
@@ -29,7 +40,7 @@
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"/>
           </svg>
-          <div class="text-secondary-900">1: Aanmelden</div>
+          <div class="text-secondary-900">1: Fiets Inchecken</div>
           <div class="text-sm opacity-80">Scan de QR code op je fietsenrek, of meld je fiets handmatig aan.</div>
         </div>
 
@@ -57,22 +68,22 @@
       </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-4 mt-4">
-      <NuxtLink href="/login"
-                class="rounded py-2 px-4 text-white bg-secondary-900 hover:bg-secondary-950 transition duration-100 grow text-center">
-        Inloggen
-      </NuxtLink>
-      <NuxtLink href="/register"
-                class="rounded py-2 px-4 text-white bg-secondary-900 hover:bg-secondary-950 transition duration-100 grow text-center">
-        Account Aanmaken
-      </NuxtLink>
-    </div>
-
     <h2 class="text-secondary-900 mt-4">Voorbeelden</h2>
     <p class="text-sm opacity-60">Bekijk hier voorbeelden van de webapplicatie.</p>
     <div class="mt-2 flex flex-row overflow-x-auto gap-4">
       <img alt="Voorbeeld van een scherm van Fietsplek Vinden" v-for="i in images" :src="`/examples/${i}`"
            class="max-w-48 rounded content-center overflow-hidden flex-shrink-0">
+    </div>
+
+    <div class="flex text-sm gap-4 mt-4">
+      <NuxtLink href="/login"
+                class="rounded py-1 px-2 text-white bg-secondary-900 hover:bg-secondary-950 transition duration-100 grow text-center">
+        Inloggen
+      </NuxtLink>
+      <NuxtLink href="/register"
+                class="rounded py-1 px-2 text-white bg-secondary-900 hover:bg-secondary-950 transition duration-100 grow text-center">
+        Account Aanmaken
+      </NuxtLink>
     </div>
 
     <div>

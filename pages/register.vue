@@ -8,13 +8,9 @@
       Maak een nieuw account aan, zodat ook jij kan bijhouden waar je fiets staat.
     </p>
 
-    <div class="bg-secondary-900 text-white p-4 rounded my-4">
-      Het is momenteel niet mogelijk een account aan te maken!
-    </div>
-
     <form class="flex flex-col gap-4" method="post" @submit.prevent="onSubmit">
-      <div v-if="loginError" class="text-sm text-red-800">
-        {{ loginError }}
+      <div v-if="registerError" class="text-sm text-red-800">
+        {{ registerError }}
       </div>
 
       <div class="flex flex-col">
@@ -47,14 +43,14 @@
       </button>
     </form>
 
-    <div class="flex flex-col lg:flex-row gap-4">
+    <div class="flex flex-col lg:flex-row gap-4 mt-4">
       <NuxtLink href="/login"
-                class="text-center rounded mt-4 block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
+                class="text-center rounded block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
         Inloggen met Bestaand Account
       </NuxtLink>
 
       <NuxtLink href="/"
-                class="text-center rounded mt-4 block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
+                class="text-center rounded block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
         Meer Info
       </NuxtLink>
     </div>
@@ -62,16 +58,13 @@
 </template>
 
 <script setup lang="ts">
-const {createUser} = useDirectusAuth();
-const {getItems} = useDirectusItems();
-
 const pushes = usePushesStore();
 
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
 const password = ref('')
-const loginError = ref()
+const registerError = ref()
 const fetching = ref(false)
 
 const router = useRouter();
@@ -86,24 +79,37 @@ const onSubmit = async () => {
     return;
   }
 
+  if (!email.value || !password.value || !firstName.value || !lastName.value) {
+    pushes.create('Ongeldige Gegevens', 'Alle velden zijn verplicht, voer overal wat in');
+    return;
+  }
+
   fetching.value = true;
 
-  pushes.create('Momenteel niet beschikbaar', 'Het is nog niet mogelijk een account aan te maken, vraag een beheerder om het voor je te doen.');
+  try {
+    const res = await fetch('https://data.arendz.nl/users/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': "application/json",
+        'Accept': "application/json",
+      },
+      body: JSON.stringify({
+        email: email.value, password: password.value, first_name: firstName.value, last_name: lastName.value
+      })
+    })
 
-  // TODO: Currently not allowed by Directus
-  // try {
-  //   await createUser({email: email.value, password: password.value, first_name: firstName, last_name: lastName});
-  //   router.push('/')
-  //
-  //   store.scans = await getItems({
-  //     collection: "bike_stores",
-  //     params: {
-  //       sort: ['-date_created']
-  //     }
-  //   });
-  // } catch (e) {
-  //   loginError.value = e
-  // }
+    if (res.status === 204) {
+      router.push('/login')
+      pushes.create('Account aangemaakt', 'Je account is aangemaakt, log in met je gegevens om toegang te krijgen tot onze website.');
+    } else {
+      const response = await res.json();
+      console.error(response);
+      registerError.value = response.errors ? response.errors.map((e: any) => e.message).join(', ') : response;
+    }
+  } catch (e) {
+    console.error(e)
+    registerError.value = e
+  }
 
   fetching.value = false;
 };

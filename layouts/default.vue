@@ -16,6 +16,11 @@
 
       <slot v-if="!user || store.isReady"/>
 
+      <div v-else-if="scansError" class="rounded p-4 bg-white shadow">
+        <div class="font-bold text-red-800">Er ging iets fout</div>
+        Kon geen gegevens inladen, bekijk de console voor meer info.
+      </div>
+
       <div v-else-if="user" class="fixed top-0 left-0 flex flex-col items-center justify-center gap-4 h-full w-full">
         <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-secondary-900"
              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,6 +49,7 @@ const {getItems} = useDirectusItems();
 
 const store = useScanStore();
 const pushes = usePushesStore();
+const scansError = ref(undefined)
 const route = useRoute();
 
 const user = useDirectusUser();
@@ -53,7 +59,12 @@ if (user.value) {
     params: {
       sort: '-date_created'
     },
-  });
+  })
+      .catch((e) => {
+        console.error(e)
+        scansError.value = e;
+        // pushes.create('Kon geen gegevens laden', 'Het is niet gelukt om jouw checkins in te laden')
+      });
 }
 
 const showBack = computed(() => {

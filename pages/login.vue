@@ -32,14 +32,14 @@
       </button>
     </form>
 
-    <div class="flex flex-col lg:flex-row gap-4">
+    <div class="flex flex-col lg:flex-row gap-4 mt-4">
       <NuxtLink href="/register"
-                class="text-center rounded mt-4 block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
+                class="text-center rounded block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
         Registreren
       </NuxtLink>
 
       <NuxtLink href="/"
-                class="text-center rounded mt-4 block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
+                class="text-center rounded block py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100 grow">
         Meer Info
       </NuxtLink>
     </div>
@@ -57,6 +57,7 @@ const fetching = ref(false)
 
 const router = useRouter();
 const store = useScanStore();
+const pushes = usePushesStore();
 
 useSeoMeta({
   title: 'Inloggen',
@@ -81,6 +82,8 @@ const onSubmit = async () => {
     });
   } catch (e) {
     loginError.value = e
+
+    pushes.create('Kon niet inloggen', 'We konden je niet inloggen, heb je de juiste gegevens gebruikt, en heb je je email geverifieerd?');
   }
 
   fetching.value = false;

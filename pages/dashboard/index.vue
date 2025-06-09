@@ -23,7 +23,10 @@
         </div>
         <div class="opacity-60 mb-2 text-sm">Gescand op: {{ displayDateTime(scans.latestScan.date_created) }}</div>
       </div>
-      <div v-else class="opacity-60 mt-4">Je staat momenteel nog nergens</div>
+      <div v-else class="mt-4">
+        <p class="mb-4">Je staat momenteel nog nergens</p>
+        <p class="text-sm opacity-60">Begin door hieronder je eerste checkin aan te maken via de knop "Nieuwe Checkin".</p>
+      </div>
     </div>
 
     <div class="w-full flex flex-col gap-4 lg:flex-row">
@@ -36,6 +39,11 @@
           class="flex-grow text-center rounded py-2 px-4 bg-secondary-900 text-white hover:bg-secondary-950 transition duration-100"
           href="/dashboard/history">
         Geschiedenis
+      </NuxtLink>
+      <NuxtLink
+          class="flex-grow text-center rounded py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100"
+          href="/dashboard/user">
+        Jouw Gegevens
       </NuxtLink>
       <button
           class="flex-grow text-center rounded py-2 px-4 bg-gray-200 hover:bg-gray-300 transition duration-100"
