@@ -8,6 +8,8 @@
       Log in om op te slaan waar je fiets staat, of om terug te kijken waar je stond.
     </p>
 
+    <BikeLocationCard class="mb-4" v-if="lastScan" :scan="lastScan" :show-delete="false"/>
+
     <form class="flex flex-col gap-4" method="post" @submit.prevent="onSubmit">
       <div v-if="loginError" class="text-sm text-red-800">
         {{ loginError }}
@@ -54,6 +56,7 @@ const email = ref('')
 const password = ref('')
 const loginError = ref()
 const fetching = ref(false)
+const lastScan: any = useCookie('latest-scan', {maxAge: 60 * 60 * 24 * 31})
 
 const router = useRouter();
 const store = useScanStore();

@@ -8,10 +8,11 @@
       Bekijk hier wat wij over je weten.
     </p>
 
-    <div class="bg-white rounded divide-y divide-gray-100 shadow">
+    <div class="rounded divide-y divide-gray-200 border border-gray-200">
       <div v-for="[key, value] in fields" class="px-2 py-1">
         <div class="text-sm opacity-60">{{ beautify(key) }}</div>
-        <div>{{ value }}</div>
+        <div v-if="value">{{ value }}</div>
+        <div v-else class="italic opacity-60">GEEN WAARDE</div>
       </div>
     </div>
   </div>

@@ -15,22 +15,16 @@
       </div>
 
       <div class="flex flex-col gap-2">
-        <div class="rounded border border-gray-200 p-2" v-for="c in scans.scans">
-          <div class="text-sm opacity-60 mb-1">{{ displayDateTime(c.date_created) }}</div>
-          <div class="text-sm">{{ getBikeShedName(c.location) }}</div>
-          <div>Rij {{ c.row }}, Plek {{ c.spot }}</div>
-          <button type="button" class="hover:underline mt-2 text-xs text-red-800" @click="deleteCheckin(c.id)">
-            Verwijderen
-          </button>
-        </div>
+        <BikeLocationCard :scan="c" @delete-checkin="deleteCheckin" v-for="c in scans.scans"/>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import BikeLocationCard from "~/components/BikeLocationCard.vue";
+
 const {deleteItems} = useDirectusItems();
-import {displayDateTime, getBikeShedName} from '~/mixins/generic-mixin'
 
 definePageMeta({
   middleware: ["auth"]
@@ -43,6 +37,8 @@ useSeoMeta({
   title: 'Geschiedenis',
 })
 
+const c = useCookie('latest-scan', {maxAge: 60 * 60 * 24 * 31})
+
 function deleteCheckin(id: string) {
   // console.log(id)
 
@@ -51,7 +47,8 @@ function deleteCheckin(id: string) {
     collection: 'bike_stores',
   })
       .then(() => {
-        scans.scans = scans.scans.filter((s) => s.id !== id)
+        scans.deleteScan(id)
+        c.value = scans.latestScan
         pushes.create('Checkin verwijderd', 'Deze checkin is verwijderd van jouw lijst')
       })
       .catch((err) => {

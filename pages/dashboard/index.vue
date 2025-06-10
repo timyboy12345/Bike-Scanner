@@ -25,11 +25,13 @@
       </div>
       <div v-else class="mt-4">
         <p class="mb-4">Je staat momenteel nog nergens</p>
-        <p class="text-sm opacity-60">Begin door hieronder je eerste checkin aan te maken via de knop "Nieuwe Checkin".</p>
+        <p class="text-sm opacity-60">
+          Begin door hieronder je eerste checkin aan te maken via de knop "Nieuwe Checkin".
+        </p>
       </div>
     </div>
 
-    <div class="w-full flex flex-col gap-4 lg:flex-row">
+    <div class="w-full flex flex-col gap-4">
       <NuxtLink
           class="flex-grow text-center rounded py-2 px-4 bg-secondary-900 text-white hover:bg-secondary-950 transition duration-100"
           href="/dashboard/scan">
@@ -51,6 +53,9 @@
       >
         Uitloggen
       </button>
+      <p class="text-sm opacity-60 text-center mx-8">
+        Je laatste check-in wordt bewaard, zodat je niet hoeft in te loggen om snel te kijken waar je fiets staat.
+      </p>
     </div>
   </div>
 </template>
@@ -73,9 +78,10 @@ const scans = useScanStore();
 const router = useRouter();
 
 function logoutDirectus() {
+  scans.reset();
   logout()
       .then(() => {
         router.push('/login')
-      })
+      });
 }
 </script>

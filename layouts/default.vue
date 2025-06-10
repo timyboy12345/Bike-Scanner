@@ -53,13 +53,20 @@ const scansError = ref(undefined)
 const route = useRoute();
 
 const user = useDirectusUser();
+const c = useCookie('latest-scan', {maxAge: 60 * 60 * 24 * 31})
+
 if (user.value) {
-  store.scans = await getItems({
+  await getItems({
     collection: "bike_stores",
     params: {
       sort: '-date_created'
     },
   })
+      .then((d: any[]) => {
+        store.init(d)
+
+        c.value = store.latestScan
+      })
       .catch((e) => {
         console.error(e)
         scansError.value = e;

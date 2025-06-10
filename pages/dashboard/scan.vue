@@ -86,6 +86,7 @@ const row = ref('');
 const spot = ref('');
 const fetching = ref(false);
 const cameraError = ref(undefined)
+const c = useCookie('latest-scan', {maxAge: 60 * 60 * 24 * 31})
 
 definePageMeta({
   middleware: ["auth"],
@@ -223,7 +224,8 @@ function addCheckin(location: string, row: string, spot: string) {
   })
       .then((res) => {
         console.log(res)
-        scans.scans.unshift(res[0])
+        scans.addScan(res[0])
+        c.value = res[0]
         pushes.create('Toegevoegd', 'De nieuwe locatie is toegevoegd')
         router.push('/dashboard')
       })
